@@ -1,0 +1,155 @@
+@if (isHome()) {
+<div class="site-shell">
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Sakura Japanese Language School home">
+      <span class="brand-mark" aria-hidden="true"><app-icon name="sakura" [size]="24" /></span>
+      <span class="brand-copy"><strong>Sakura</strong><span>Japanese Language School</span></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-label="Toggle navigation"
+      (click)="menuOpen.set(!menuOpen())"><app-icon [name]="menuOpen() ? 'x' : 'menu'" [size]="22" /></button>
+    <nav class="nav-links" [class.is-open]="menuOpen()" aria-label="Primary navigation">
+      <a href="#courses" (click)="menuOpen.set(false)">Courses</a>
+      <a href="#why-sakura" (click)="menuOpen.set(false)">Why Sakura</a>
+      <a href="#batches" (click)="menuOpen.set(false)">Batches</a>
+      <button class="nav-signin" type="button" (click)="goToLogin()">Sign in
+        <app-icon name="arrow-up-right" [size]="15" /></button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero-section" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> Learn with heart, grow with confidence</div>
+        <h1 id="hero-title">Your next chapter<br />starts in <em>Sakura.</em></h1>
+        <p class="hero-description">Learn Japanese through thoughtful lessons, encouraging teachers, and a community
+          that makes every small step feel meaningful.</p>
+        <div class="hero-actions">
+          <button class="button button-primary" type="button" (click)="scrollToCourses()">Explore courses <app-icon
+              name="arrow-right" [size]="18" /></button>
+          <button class="button button-quiet" type="button"
+            (click)="goToRegister()">Create an account <app-icon
+              name="user-plus" [size]="17" /></button>
+        </div>
+        <div class="hero-note"><app-icon name="heart" [size]="15" /> New learners are welcome here.</div>
+      </div>
+      <div class="hero-art" aria-label="A calm illustration of the Sakura school community">
+        <div class="art-wash wash-one"></div>
+        <div class="art-wash wash-two"></div>
+        <div class="moon"></div>
+        <div class="art-label label-top"><span>春</span> Begin beautifully</div>
+        <div class="art-label label-bottom">Your pace. Your path. <strong>さくら</strong></div>
+        <div class="branch branch-main"></div>
+        <div class="branch branch-small"></div>
+        <span class="petal petal-one">✿</span><span class="petal petal-two">✿</span><span
+          class="petal petal-three">✿</span><span class="petal petal-four">✿</span><span
+          class="petal petal-five">✿</span>
+        <div class="art-stamp"><span>さ</span><small>Sakura<br />since 2012</small></div>
+      </div>
+    </section>
+
+    <section class="stats-row" aria-label="Sakura school highlights">
+      <div class="stat-item"><strong>12</strong><span>active courses</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><strong>8</strong><span>welcoming teachers</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><strong>96%</strong><span>learner confidence</span></div>
+      <div class="stat-spacer"></div>
+      <div class="next-batch"><span class="pulse"></span><span><strong>Next batch starts</strong><small>December 5,
+            2026</small></span><app-icon name="calendar-days" [size]="20" /></div>
+    </section>
+
+    <section class="courses-section" id="courses" aria-labelledby="courses-title">
+      <div class="section-heading">
+        <div>
+          <div class="section-kicker">Find your rhythm</div>
+          <h2 id="courses-title">Explore courses & batches</h2>
+          <p>Small classes, practical lessons, and a clear path from your first kana to confident conversation.</p>
+          @if (catalogLoading()) { <span class="catalog-note">Checking the live Sakura catalog…</span> }
+          @else if (catalogError()) { <span class="catalog-note">{{ catalogError() }}</span> }
+        </div>
+        <label class="search-box"><app-icon name="search" [size]="18" /><input type="search"
+            placeholder="Search courses" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" /></label>
+      </div>
+      <div class="filter-row" role="tablist" aria-label="Course categories">
+        @for (category of categories; track category) { <button class="filter-chip"
+          [class.active]="selectedCategory() === category" type="button" role="tab"
+          [attr.aria-selected]="selectedCategory() === category" (click)="chooseCategory(category)">{{ category
+          }}</button> }
+      </div>
+      <div class="course-grid">
+        @for (course of filteredCourses(); track course.title) {
+        <article class="course-card">
+          <div [class]="'course-visual ' + course.accent"><span class="visual-badge"><app-icon name="sparkle"
+                [size]="13" /> {{ course.level }}</span>
+            <div class="visual-illustration"><app-icon [name]="course.icon" [size]="70" [strokeWidth]="1.15" /></div>
+            <span class="visual-japanese">日本語</span><span class="visual-seal">S</span>
+          </div>
+          <div class="course-content">
+            <div class="course-meta"><span><app-icon name="clock" [size]="14" /> {{ course.duration
+                }}</span><span><app-icon name="users" [size]="14" /> {{ course.seats }}</span></div>
+            <h3>{{ course.title }}</h3>
+            <p>{{ course.description }}</p>
+            <div class="course-footer"><span class="schedule"><app-icon name="calendar-days" [size]="15" /> {{
+                course.schedule }}</span><button class="icon-button" type="button"
+                [attr.aria-label]="'View ' + course.title"
+                (click)="openCourse(course)"><app-icon name="arrow-up-right"
+                  [size]="18" /></button></div>
+          </div>
+        </article>
+        } @empty { <div class="empty-state"><app-icon name="search-x" [size]="26" /><strong>No courses
+            found</strong><span>Try a different search or category.</span></div> }
+      </div>
+      @if (batches().length) {
+      <div class="public-batches" id="batches">
+        <div class="public-batches-heading"><div><div class="section-kicker">Find your time</div><h2>Upcoming batches</h2></div><button class="button button-quiet" type="button" (click)="goToLogin()">Apply after signing in <app-icon name="arrow-right" [size]="17" /></button></div>
+        <div class="public-batch-grid">@for (batch of batches(); track batch.id) { <article class="public-batch-card" [class.is-unavailable]="batch.available === false"><span class="batch-status">{{ batch.available === false ? 'UNAVAILABLE' : batch.status }}</span><h3>{{ batch.batchName }}</h3><p>{{ batch.courseName }}</p><span><app-icon name="calendar-days" [size]="14" /> {{ batch.startDate | date:'mediumDate' }} · {{ batch.schedule }}</span>@if (batch.available === false) { <strong class="unavailable-copy">This batch is full</strong> }</article> }</div>
+      </div>
+      }
+    </section>
+
+    <section class="why-section" id="why-sakura" aria-labelledby="why-title">
+      <div class="why-intro">
+        <div class="section-kicker">The Sakura way</div>
+        <h2 id="why-title">Language learning<br /><em>with a little more heart.</em></h2>
+      </div>
+      <div class="why-points">
+        <div class="why-point"><span class="point-icon"><app-icon name="messages-square" [size]="21" /></span>
+          <div>
+            <h3>Teachers who notice</h3>
+            <p>Get personal guidance from teachers who remember your goals and celebrate your progress.</p>
+          </div>
+        </div>
+        <div class="why-point"><span class="point-icon"><app-icon name="sprout" [size]="21" /></span>
+          <div>
+            <h3>Progress you can feel</h3>
+            <p>Our practical curriculum turns each class into a small, useful win you can take into the world.</p>
+          </div>
+        </div>
+        <div class="why-point"><span class="point-icon"><app-icon name="coffee" [size]="21" /></span>
+          <div>
+            <h3>A place to belong</h3>
+            <p>Meet kind, curious people and build your Japanese confidence together, one conversation at a time.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="batch-banner" aria-label="Upcoming batch call to action">
+      <div><span class="section-kicker">Ready when you are</span>
+        <h2>Make room for something new.</h2>
+        <p>Join the next intake and start learning Japanese with a community behind you.</p>
+      </div><button class="button button-light" type="button"
+        (click)="goToLogin()">View upcoming batches <app-icon
+          name="arrow-right" [size]="18" /></button>
+    </section>
+  </main>
+
+  <footer class="footer"><a class="brand" href="#top"><span class="brand-mark"><app-icon name="sakura"
+          [size]="21" /></span><span class="brand-copy"><strong>Sakura</strong><span>Japanese Language
+          School</span></span></a><span>Learn gently. Grow boldly.</span><span>© 2026 Sakura</span></footer>
+  @if (toastMessage()) { <div class="toast" role="status"><app-icon name="info" [size]="18" /> {{ toastMessage() }}
+  </div> }
+</div>
+} @else {
+  <router-outlet />
+}

@@ -1,0 +1,19 @@
+# Local configuration and secrets
+.env
+
+# Java / Maven
+**/target/
+
+# Angular / Node
+**/node_modules/
+frontend/.angular/
+frontend/dist/
+
+# IDE and operating-system files
+.metadata/
+**/.classpath
+**/.project
+**/.settings/
+**/.vscode/
+**/.idea/
+*.log

@@ -1,0 +1,13 @@
+.git
+.github
+.metadata
+.env
+
+**/node_modules
+frontend/.angular
+frontend/dist
+language-school/target
+
+**/.vscode
+**/.idea
+**/*.log
