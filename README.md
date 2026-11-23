@@ -1,14 +1,64 @@
 # Sakura Japanese Language School
 
-Sakura Japanese Language School is a full-stack language-school management application with a Spring Boot API and an Angular frontend. It supports public course and batch browsing, student registration and enrollment, JWT authentication, administrator management, and teacher class views.
+Sakura Japanese Language School is a full-stack language-school management application with a Spring Boot API and an Angular frontend. In this application, students can explore available Japanese language courses and submit enrollment requests. Administrators can manage courses, teachers, and enrollment requests. Teachers can access their assigned class information.
 
-## Technology stack
+## Project Features
 
-- Java 17 and Spring Boot 4
-- Spring Data JPA with MySQL 8.4
-- JWT-based authentication and Spring Security
-- Angular 22 and TypeScript
-- Docker Compose with Nginx for the production frontend
+### Student
+- Register and log in securely.
+- Browse available courses and class batches.
+- Submit enrollment requests.
+- View enrollment status.
+
+### Teacher
+- Log in to the teacher dashboard.
+- View assigned classes.
+- Access class and student information.
+
+### Adminstrator
+- Manage courses and class batches.
+- Manage teacher accounts.
+- Review and approve student enrollment requests.
+- Manage school information.
+
+## Application Workflow
+- Students create an account and log in.
+- Students browse available courses and class batches.
+- Students submit an enrollment request.
+- Administrators review and approve or reject enrollment requests.
+- Teachers access their assigned classes and student information.
+
+## Technology Stack
+
+### Backend
+- Java
+- Spring Boot
+- Spring Security
+- Spring Data JPA
+- MySQL
+- JWT Authentication
+- REST API
+
+### Frontend
+- Angular
+- TypeScript
+
+### Development and Deployment
+
+- Docker and Docker Compose
+- Nginx
+- Maven
+- Git and GitHub
+
+## Architecture
+This application uses a layered backend architecture:
+
+- Controller: Handles HTTP requests and responses.
+- Service: Contains business logic.
+- Repository: Handles database operations.
+- Entity: Represents database tables.
+- DTO: Separates API request and response data.
+The Angular frontend communicates with the Spring Boot backend through REST APIs. MySQL stores application data.
 
 ## Run with Docker
 
@@ -21,24 +71,6 @@ docker compose up --build -d
 ```
 
 Open [http://localhost](http://localhost). Nginx serves the Angular application and proxies `/api/...` requests to Spring Boot. The database is persisted in the `language-school_mysql-data` Docker volume.
-
-If MySQL is already using host port `3306`, set this in `.env` before starting:
-
-```env
-MYSQL_PORT=3307
-```
-
-The container still uses MySQL port `3306` internally; only the host-side port changes.
-
-Useful commands:
-
-```powershell
-docker compose ps
-docker compose logs -f backend
-docker compose down
-```
-
-Do not use `docker compose down -v` unless you intentionally want to delete the Docker database volume.
 
 ## Migrate an existing MySQL database
 
@@ -97,9 +129,6 @@ docker/frontend/       Frontend image and Nginx proxy
 docker-compose.yml     Frontend, backend, and MySQL services
 ```
 
-## Security
-
-Do not commit `.env` or production credentials. Set `APP_SECURITY_JWT_SECRET` to a randomly generated value of at least 32 UTF-8 bytes in every deployed environment. The committed configuration contains only a local-development placeholder.
 
 ## License
 
